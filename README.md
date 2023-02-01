@@ -1,2 +1,2 @@
 ###  Link para a aplicação ✨
-https://caio-trivia.vercel.app/
+https://caio-expense-control.vercel.app/
