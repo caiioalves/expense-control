@@ -4,12 +4,14 @@ import Context from "./Context";
 function Provider ({children}) {
     const [ message, setMessage ] = useState({open: false, text: ''});
     const [userName, setUserName] = useState("");
+    const [email, setEmail] = useState("");
     const [data, setData] = useState([]);
 
     const state = {
       message, setMessage,
       userName, setUserName,
-      data, setData
+      data, setData,
+      email, setEmail
     }
 
     return(

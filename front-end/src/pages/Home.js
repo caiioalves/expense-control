@@ -23,15 +23,16 @@ import Context from "../context/Context";
 import Alert from "../componentes/Alert";
 import AddIcon from "@mui/icons-material/Add";
 import Dashboard from "../componentes/Dashboard";
+import { getData } from "../Utilis";
 
 function Home() {
-  const { setMessage, setUserName, setData } = useContext(Context);
+  const { data, setMessage, setUserName, setData, setEmail } = useContext(Context);
 
   const [valor, setValor] = useState(0);
   const [descriçao, setDescriçao] = useState("");
   const [selectCategoria, setSelectCategoria] = useState("Alimentação");
   const [selectPagamento, setSelectPagamento] = useState("Dinheiro");
-  const [array, setArray] = useState([]);
+  // const [array, setArray] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [idUpdate, setIdUpdate] = useState();
   const [idDelete, setIdDelete] = useState();
@@ -41,18 +42,18 @@ function Home() {
   const [deleteAlert, setDeleteAlert] = useState({ open: false, text: "" });
   const navigate = useNavigate();
 
-  const getData = async (token) => {
-    const dados = await axios.post(
-      "https://wallet-back-end-rexp.vercel.app/wallet/token",
-      {},
-      { headers: { token } }
-    );
-    return dados;
-  };
+  // const getData = async (token) => {
+  //   const dados = await axios.post(
+  //     "https://wallet-back-end-rexp.vercel.app/wallet/token",
+  //     {},
+  //     { headers: { token } }
+  //   );
+  //   return dados;
+  // };
 
   useEffect(() => {
     const retorno = async () => {
-      const token = sessionStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
       if (!token) {
         navigate("/login");
       }
@@ -60,18 +61,21 @@ function Home() {
       if (dados.data === "Token invalido") {
         navigate("/login");
       } else {
-        setArray(dados.data.walletData);
+        // setArray(dados.data.walletData);
         setData(dados.data.walletData);
         setUserName(dados.data.username);
+        setEmail(dados.data.email);
+        console.log(dados.data);
       }
     };
     retorno();
-  }, [navigate, setUserName, setData]);
+    // tokenValidation(token, navigate, setArray, setData, setUserName, setEmail);
+  }, [navigate, setUserName, setData, setEmail]);
 
   useEffect(() => {
-    const soma = array.reduce((prevVL, vl) => prevVL + +vl.Valor, 0);
+    const soma = data.reduce((prevVL, vl) => prevVL + +vl.Valor, 0);
     setValorTotal(soma);
-  }, [array]);
+  }, [data]);
 
   const handleClick = async () => {
     if (valor < 1) {
@@ -112,7 +116,7 @@ function Home() {
         }, 1000);
       } else {
         const getDados = await getData(token);
-        setArray(getDados.data.walletData);
+        setData(getDados.data.walletData);
       }
       handleClickCancel();
       setAdd(false);
@@ -130,7 +134,7 @@ function Home() {
   const handleClickEdit = async ({ target }) => {
     setEditMode(true);
     console.log(target);
-    const dados = array[target.value];
+    const dados = data[target.value];
     console.log(dados);
 
     setValor(dados.Valor);
@@ -152,7 +156,7 @@ function Home() {
 
   const handleClickSendDelete = async () => {
     const { Valor, Categoria, Descrição, MetodoDePagamento, id } =
-      array[idDelete];
+      data[idDelete];
     const token = sessionStorage.getItem("token");
     await axios.post(
       "https://wallet-back-end-rexp.vercel.app/wallet/delete",
@@ -166,7 +170,7 @@ function Home() {
       { headers: { token } }
     );
     const getDados = await getData(token);
-    setArray(getDados.data.walletData);
+    setData(getDados.data.walletData);
     setDeleteAlert({ open: false, text: "" });
   };
 
@@ -207,7 +211,7 @@ function Home() {
         setMessage({ open: false, text: "" });
       }, 1000);
       const getDados = await getData(token);
-      setArray(getDados.data.walletData);
+      setData(getDados.data.walletData);
     }
   };
 
@@ -336,23 +340,23 @@ function Home() {
         elevation={3}
         sx={{
           borderRadius: "50%",
-          width: '3%',
-          height: '6vh',
+          width: "3%",
+          height: "6vh",
           mt: 5,
           display: "flex",
           flexDirection: "row",
           // height: "10vh",
-          justifyContent: 'center',
+          justifyContent: "center",
           alignItems: "center",
         }}
       >
         {/* <Button onClick={() => setAdd(true)} startIcon={<AddIcon />}>
           Adicionar despesa
         </Button> */}
-         <IconButton onClick={() => setAdd(true)}>
-            <AddIcon color="primary" />
-          </IconButton>
-          {/* <Typography>Adicionar despesa</Typography>  */}
+        <IconButton onClick={() => setAdd(true)}>
+          <AddIcon color="primary" />
+        </IconButton>
+        {/* <Typography>Adicionar despesa</Typography>  */}
       </Paper>
       {/* </Box> */}
       <TableContainer
@@ -407,7 +411,7 @@ function Home() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {array.map((valor, i) => (
+            {data.map((valor, i) => (
               <TableRow key={i}>
                 <TableCell align="center">{`R$ ${valor.Valor}`}</TableCell>
                 <TableCell align="center">{valor.Categoria}</TableCell>
@@ -419,7 +423,7 @@ function Home() {
                     id={valor.id}
                     onClick={handleClickEdit}
                     color="warning"
-                    sx={{ fontSize: '11px', fontWeight: 'bold' }}
+                    sx={{ fontSize: "11px", fontWeight: "bold" }}
                     size="small"
                     variant="contained"
                   >
@@ -431,7 +435,7 @@ function Home() {
                     id={i}
                     onClick={handleClickDelete}
                     color="error"
-                    sx={{ fontSize: '11px', fontWeight: 'bold' }}
+                    sx={{ fontSize: "11px", fontWeight: "bold" }}
                     size="small"
                     variant="contained"
                   >
@@ -457,26 +461,26 @@ function Home() {
         </Box> */}
       </TableContainer>
       {/* <Box width="100%" display="flex" justifyContent="flex-start"> */}
-        <Paper
-          elevation={3}
-          sx={{
-            pl: 3,
-            pr: 3,
-            borderRadius: "10px",
-            mt: 2,
-            display: "flex",
-            flexDirection: "row",
-            gap: 0,
-            height: "10vh",
-            alignItems: "center",
-          }}
-        >
-          <Typography>Total de gastos: </Typography>
-          <Typography
-            fontWeight="bold"
-            color="primary"
-          >{`R$ ${valorTotal}`}</Typography>
-        </Paper>
+      <Paper
+        elevation={3}
+        sx={{
+          pl: 3,
+          pr: 3,
+          borderRadius: "10px",
+          mt: 2,
+          display: "flex",
+          flexDirection: "row",
+          gap: 0,
+          height: "10vh",
+          alignItems: "center",
+        }}
+      >
+        <Typography>Total de gastos: </Typography>
+        <Typography
+          fontWeight="bold"
+          color="primary"
+        >{`R$ ${valorTotal}`}</Typography>
+      </Paper>
       {/* </Box> */}
       <Alert />
       <Dialog open={deleteAlert.open}>

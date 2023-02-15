@@ -58,25 +58,25 @@ function Dashboard() {
           mt={1}
           mb={3}
         >
-          <Avatar>GL</Avatar>
+          <Avatar sx={{ bgcolor: 'primary.main' }}>{userName[0]}</Avatar>
           <Typography>{userName}</Typography>
         </Box>
       )}
       <Divider sx={{ width: "100%" }} />
       <Box mt={4} p={1} display="flex" alignItems="center" flexDirection="row">
-        <Button sx={{ fontWeight: 'bold' }} onClick={() => navigate('/')} startIcon={<HomeIcon />}>{!teste && "Tabela"}</Button>
+        <Button color="secondary" sx={{ fontWeight: 'bold' }} onClick={() => navigate('/')} startIcon={<HomeIcon />}>{!teste && "Despesas"}</Button>
       </Box>
       <Box p={1} display="flex" alignItems="center" flexDirection="row">
-        <Button sx={{ fontWeight: 'bold' }} onClick={() => navigate('/statistics')} startIcon={<BarChartIcon />}>{!teste && "Estatísticas"}</Button>
+        <Button color="secondary" sx={{ fontWeight: 'bold' }} onClick={() => navigate('/statistics')} startIcon={<BarChartIcon />}>{!teste && "Estatísticas"}</Button>
       </Box>
       <Box mb={4} p={1} display="flex" alignItems="center" flexDirection="row">
-        <Button sx={{ fontWeight: 'bold' }} onClick={() => navigate('/settings')} startIcon={<SettingsIcon />}>
+        <Button color="secondary" sx={{ fontWeight: 'bold' }} onClick={() => navigate('/settings')} startIcon={<SettingsIcon />}>
           {!teste && "Configurações"}
         </Button>
       </Box>
       <Divider sx={{ width: "100%" }} />
       <Box p={1} display="flex" alignItems="center" flexDirection="row">
-        <Button sx={{ fontWeight: 'bold' }} onClick={handleClickLogout} startIcon={<LogoutIcon />}>
+        <Button color="secondary" sx={{ fontWeight: 'bold' }} onClick={handleClickLogout} startIcon={<LogoutIcon />}>
           {!teste && "Sair"}
         </Button>
       </Box>
